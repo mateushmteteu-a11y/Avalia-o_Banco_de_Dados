@@ -357,7 +357,281 @@ WHERE preco > (
 
 
 #parte 10
+DELIMITER $$
 
+CREATE PROCEDURE cadastrar_cliente(
+    IN p_nome VARCHAR(255),
+    IN p_telefone VARCHAR(20),
+    IN p_endereco VARCHAR(255)
+)
+BEGIN
+
+    IF p_nome IS NULL OR p_nome = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'O nome do cliente é obrigatório';
+    END IF;
+
+    INSERT INTO clientes (nome, telefone, endereco)
+    VALUES (p_nome, p_telefone, p_endereco);
+
+END $$
+
+
+CREATE PROCEDURE abrir_ordem(
+    IN p_carro_id INT,
+    IN p_mecanico_id INT
+)
+BEGIN
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM veiculos
+        WHERE carro_id = p_carro_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Veículo não encontrado';
+    END IF;
+
+    INSERT INTO ordemDeServico (
+        carro_id,
+        mecanico_id,
+        status_os
+    )
+    VALUES (
+        p_carro_id,
+        p_mecanico_id,
+        'Em Aberto'
+    );
+
+END $$
+
+
+CREATE PROCEDURE alterar_status_ordem(
+    IN p_id_os INT,
+    IN p_status VARCHAR(255)
+)
+BEGIN
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM ordemDeServico
+        WHERE id_os = p_id_os
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ordem de serviço não encontrada';
+    END IF;
+
+    UPDATE ordemDeServico
+    SET status_os = p_status
+    WHERE id_os = p_id_os;
+
+END $$
+
+
+CREATE PROCEDURE adicionar_servico_ordem(
+    IN p_os_id INT,
+    IN p_servico_id INT,
+    IN p_quantidade INT
+)
+BEGIN
+
+    DECLARE valor DECIMAL(10,2);
+
+    IF p_quantidade <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'A quantidade deve ser maior que zero';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM ordemDeServico
+        WHERE id_os = p_os_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ordem de serviço não encontrada';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM servico
+        WHERE id_servico = p_servico_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Serviço não encontrado';
+    END IF;
+
+    SELECT preco
+    INTO valor
+    FROM servico
+    WHERE id_servico = p_servico_id;
+
+    INSERT INTO itensDeServico (
+        os_id,
+        servico_id,
+        quantidade,
+        preco_cobrado
+    )
+    VALUES (
+        p_os_id,
+        p_servico_id,
+        p_quantidade,
+        valor
+    );
+
+END $$
+
+DELIMITER ;
+
+
+# Parte 11 - Triggers
+
+ALTER TABLE ordemDeServico
+ADD COLUMN data_finalizacao DATETIME;
+
+CREATE TABLE historico_preco_servico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    servico_id INT,
+    preco_anterior DECIMAL(10,2),
+    preco_novo DECIMAL(10,2),
+    data_alteracao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (servico_id)
+        REFERENCES servico(id_servico)
+);
+
+DELIMITER $$
+
+CREATE TRIGGER trg_historico_preco
+AFTER UPDATE ON servico
+FOR EACH ROW
+BEGIN
+
+    IF OLD.preco <> NEW.preco THEN
+
+        INSERT INTO historico_preco_servico (
+            servico_id,
+            preco_anterior,
+            preco_novo,
+            data_alteracao
+        )
+        VALUES (
+            OLD.id_servico,
+            OLD.preco,
+            NEW.preco,
+            NOW()
+        );
+
+    END IF;
+
+END $$
+
+
+CREATE TRIGGER trg_finalizar_ordem
+BEFORE UPDATE ON ordemDeServico
+FOR EACH ROW
+BEGIN
+
+    IF NEW.status_os = 'Finalizada'
+       AND OLD.status_os <> 'Finalizada' THEN
+
+        SET NEW.data_finalizacao = NOW();
+
+    END IF;
+
+END $$
+
+
+CREATE TRIGGER trg_validar_preco_servico
+BEFORE INSERT ON servico
+FOR EACH ROW
+BEGIN
+
+    IF NEW.preco <= 0 THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'O preço do serviço deve ser maior que zero';
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+
+# Parte 12 - Integridade do Banco
+
+ALTER TABLE clientes
+ADD COLUMN cpf VARCHAR(14) UNIQUE;
+
+ALTER TABLE servico
+ADD CONSTRAINT chk_preco_positivo
+CHECK (preco > 0);
+
+
+UPDATE clientes
+SET cpf = '111.111.111-11'
+WHERE id = 1;
+
+UPDATE clientes
+SET cpf = '222.222.222-22'
+WHERE id = 2;
+
+
+# CPF duplicado
+# Proteção: UNIQUE
+
+INSERT INTO clientes (
+    nome,
+    telefone,
+    endereco,
+    cpf
+)
+VALUES (
+    'João da Silva',
+    '(48) 99999-0000',
+    'Florianópolis - SC',
+    '111.111.111-11'
+);
+
+
+# Veículo para cliente inexistente
+# Proteção: FOREIGN KEY
+
+INSERT INTO veiculos (
+    cliente_id,
+    modelo,
+    placa
+)
+VALUES (
+    9999,
+    'Fiat Argo',
+    'AAA-0001'
+);
+
+
+# Preço inválido
+# Proteção: CHECK e Trigger
+
+INSERT INTO servico (
+    descricao,
+    preco
+)
+VALUES (
+    'Troca de Filtro',
+    -100
+);
+
+
+# Exclusão de registro referenciado
+# Proteção: FOREIGN KEY
+
+DELETE FROM servico
+WHERE id_servico = 1;
+
+
+# Ordem para veículo inexistente
+# Proteção: Procedure e FOREIGN KEY
+
+CALL abrir_ordem(9999, 1);
 #parte 14
 SELECT 
     m.nome AS mecanico,
