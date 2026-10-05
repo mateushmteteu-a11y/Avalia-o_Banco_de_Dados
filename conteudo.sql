@@ -1,6 +1,5 @@
-
+#Parte 2
 CREATE DATABASE IF NOT EXISTS oficina;
-
 USE oficina;
 
 CREATE TABLE IF NOT EXISTS clientes (
@@ -9,13 +8,11 @@ CREATE TABLE IF NOT EXISTS clientes (
     telefone VARCHAR(20),
     endereco VARCHAR(255)
 );
-
 CREATE TABLE IF NOT EXISTS mecanico (
     mecanico_id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     telefone VARCHAR(20)
 );
-
 CREATE TABLE IF NOT EXISTS veiculos (
     carro_id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT,
@@ -23,13 +20,11 @@ CREATE TABLE IF NOT EXISTS veiculos (
     placa VARCHAR(10),
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 );
-
 CREATE TABLE IF NOT EXISTS servico (
     id_servico INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(255) NOT NULL,
     preco DECIMAL(10, 2) NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS ordemDeServico (
     id_os INT AUTO_INCREMENT PRIMARY KEY,
     carro_id INT,
@@ -39,20 +34,18 @@ CREATE TABLE IF NOT EXISTS ordemDeServico (
     FOREIGN KEY (carro_id) REFERENCES veiculos(carro_id) ON DELETE CASCADE,
     FOREIGN KEY (mecanico_id) REFERENCES mecanico(mecanico_id) ON DELETE SET NULL
 );
-
 CREATE TABLE IF NOT EXISTS itensDeServico (
     id INT AUTO_INCREMENT PRIMARY KEY,
     os_id INT,
     servico_id INT,
     quantidade INT DEFAULT 1,
-    preco_cobrado DECIMAL(10, 2),
+    preco_cobrado DECIMAL(10, 2), 
     FOREIGN KEY (os_id) REFERENCES ordemDeServico(id_os) ON DELETE CASCADE,
     FOREIGN KEY (servico_id) REFERENCES servico(id_servico)
 );
 
 
-
-
+#Parte 3
 INSERT INTO clientes (nome, telefone, endereco) VALUES
 ('Carlos Silva', '(11) 98888-1111', 'Av. Paulista, 1000 - SP'),
 ('Ana Oliveira', '(11) 98888-2222', 'Rua Augusta, 450 - SP'),
@@ -64,9 +57,8 @@ INSERT INTO clientes (nome, telefone, endereco) VALUES
 ('Beatriz Rodrigues', '(41) 95555-8888', 'Rua XV de Novembro, 600 - Curitiba'),
 ('Lucas Almeida', '(51) 94444-9999', 'Av. Ipiranga, 2000 - Porto Alegre'),
 ('Camila Ribeiro', '(51) 94444-0000', 'Rua dos Andradas, 350 - Porto Alegre');
-
 INSERT INTO veiculos (cliente_id, modelo, placa) VALUES
-(1, 'VW Gol', 'ABC-1234'),
+(1, 'VW Gol', 'ABC-1234'),  
 (1, 'Honda Civic', 'XYZ-5678'),
 (2, 'Fiat Uno', 'MNO-9012'),
 (3, 'Chevrolet Onix', 'QWE-3456'),
@@ -78,14 +70,12 @@ INSERT INTO veiculos (cliente_id, modelo, placa) VALUES
 (8, 'Fiat Palio', 'ZXC-8901'),
 (9, 'Chevrolet Cruze', 'VBN-2345'),
 (10, 'VW Polo', 'FGH-5678');
-
 INSERT INTO mecanico (nome, telefone) VALUES
 ('Raimundo Nonato (Mestre)', '(11) 91111-0001'),
 ('Pedro Alvares (Suspensão)', '(11) 91111-0002'),
 ('Sérgio Moro (Elétrica)', '(11) 91111-0003'),
 ('Fabiano Silva (Alinhamento)', '(11) 91111-0004'),
 ('André Souza (Motor)', '(11) 91111-0005');
-
 INSERT INTO servico (descricao, preco) VALUES
 ('Troca de Óleo e Filtro', 150.00),
 ('Alinhamento e Balanceamento', 120.00),
@@ -97,7 +87,6 @@ INSERT INTO servico (descricao, preco) VALUES
 ('Reparo de Suspensão (Mão de Obra)', 350.00),
 ('Troca de Velas de Ignição', 130.00),
 ('Diagnóstico de Injeção Eletrônica', 100.00);
-
 INSERT INTO ordemDeServico (carro_id, mecanico_id, data_emissao, status_os) VALUES
 (1, 1, '2026-09-20 09:00:00', 'Concluído'),
 (2, 5, '2026-09-21 10:30:00', 'Concluído'),
@@ -105,11 +94,10 @@ INSERT INTO ordemDeServico (carro_id, mecanico_id, data_emissao, status_os) VALU
 (4, 2, '2026-09-24 08:15:00', 'Concluído'),
 (5, 3, '2026-09-25 11:00:00', 'Em Andamento'),
 (6, 1, '2026-09-25 15:45:00', 'Aguardando Peça'),
-(7, 2, '2026-09-26 09:30:00', 'Em Aberto'),
+(7, 2, '2026-09-26 09:30:00', 'Em Aberto'), 
 (8, 5, '2026-09-27 10:00:00', 'Em Aberto'),
 (9, 4, '2026-09-28 08:00:00', 'Em Andamento'),
 (10, 3, '2026-09-28 13:20:00', 'Em Aberto');
-
 INSERT INTO itensDeServico (os_id, servico_id, quantidade, preco_cobrado) VALUES
 (1, 1, 1, 150.00),
 (1, 10, 1, 100.00),
@@ -121,30 +109,18 @@ INSERT INTO itensDeServico (os_id, servico_id, quantidade, preco_cobrado) VALUES
 (5, 6, 1, 190.00),
 (6, 1, 1, 150.00),
 (6, 9, 1, 175.00),
-(7, 2, 1, 120.00),
+(7, 2, 1, 120.00), 
 (8, 4, 1, 180.00),
-(9, 8, 1, 350.00),
+(9, 8, 1, 350.00), 
 (9, 2, 1, 120.00),
 (10, 6, 1, 190.00);
 
 
-
-
+#parte 4
 INSERT INTO clientes (nome, telefone, endereco)
-VALUES (
-    'Gabriel Lopes',
-    '(48) 99999-1111',
-    'Florianópolis - SC'
-);
-
-INSERT INTO servico (descricao, preco)
-VALUES (
-    'Troca de Bateria',
-    300.00
-);
-
+VALUES ('Gabriel Lopes', '(48) 99999-1111', 'Florianópolis - SC');
+INSERT INTO servico (descricao, preco) VALUES ('Troca de Bateria',300.00);
 SELECT * FROM clientes;
-
 SELECT
     ordemDeServico.id_os,
     veiculos.modelo,
@@ -157,49 +133,115 @@ INNER JOIN veiculos
     ON ordemDeServico.carro_id = veiculos.carro_id
 LEFT JOIN mecanico
     ON ordemDeServico.mecanico_id = mecanico.mecanico_id;
+UPDATE clientes SET telefone = '(48) 99999-2222' WHERE nome = 'Gabriel Lopes';
+SELECT * FROM clientes WHERE nome = 'Gabriel Lopes';
+UPDATE servico SET preco = 350.00 WHERE descricao = 'Troca de Bateria';
+SELECT * FROM servico WHERE descricao = 'Troca de Bateria';
+DELETE FROM clientes WHERE nome = 'Gabriel Lopes';
+DELETE FROM servico WHERE descricao = 'Troca de Bateria';
 
-UPDATE clientes
-SET telefone = '(48) 99999-2222'
-WHERE nome = 'Gabriel Lopes';
 
-SELECT *
+#parte 5
+# Listar Clientes
+ 
+SELECT id, nome, telefone, endereco
 FROM clientes
-WHERE nome = 'Gabriel Lopes';
+ORDER BY nome ASC;
+ 
+ 
+# Localizar veículos de um cliente
+ 
+SELECT v.placa, v.modelo, v.cliente_id
+FROM veiculos v
+JOIN clientes c ON c.id = v.id_cliente
+WHERE c.nome = 'Carlos Silva';
+ 
+ 
+# Serviços acima de R$ 200
+ 
+select descricao, preco
+from servico
+where valor > 200
+order by valor desc;
+ 
+ 
+# Serviços entre R$ 100 e R$ 200
+ 
+select descricao, preco
+from servico
+where preco >= 100 AND valor <= 500
+order by preco ASC;
+ 
+ 
+# Clientes por inicial do nome
+ 
+select nome, telefone
+from clientes
+where nome like 'A%'
+order by nome ASC;
+ 
+ 
+# Ordens abertas
+ 
+select id_os, carro_id, status, data_emissao
+from ordemDeServico
+where status in ('concluido', 'em andamento', 'em aberto', 'aguardando peca')
+order by data_emissao ASC;
+ 
+ 
+# Cinco serviços mais caros
+ 
+select descricao, preco
+from servico
+order by preco ASC
+limit 5;
 
-UPDATE servico
-SET preco = 350.00
-WHERE descricao = 'Troca de Bateria';
 
-SELECT *
-FROM servico
-WHERE descricao = 'Troca de Bateria';
-
-DELETE FROM clientes
-WHERE nome = 'Gabriel Lopes';
-
-DELETE FROM servico
-WHERE descricao = 'Troca de Bateria';
+#parte 6
+select count(*) from clientes;
+select count(*) from veiculos;
+select max(preco) from servico;
+select min(preco) from servico;
+select avg(preco) from servico;
+select sum(preco) from servico;
 
 
-# Parte 6 - Funções de agregação
+#parte 7
+# Quantidade de veiculos por cliente
+SELECT
+    c.nome AS cliente,
+    COUNT(v.carro_id) AS quantidade_veiculos
+FROM clientes c
+LEFT JOIN veiculos v ON c.id = v.cliente_id
+GROUP BY c.id, c.nome;
+ 
+# Quantidade de ordens atendidas pelo mecânico
+SELECT
+    m.nome AS mecanico,
+    COUNT(o.id_os) AS quantidade_ordens
+FROM mecanico m
+LEFT JOIN ordemDeServico o ON m.mecanico_id = o.mecanico_id
+GROUP BY m.mecanico_id, m.nome;
+ 
+# o Having abaixo
+SELECT
+    m.nome AS mecanico,
+    COUNT(o.id_os) AS quantidade_ordens
+FROM mecanico m
+INNER JOIN ordemDeServico o
+    ON m.mecanico_id = o.mecanico_id
+GROUP BY m.mecanico_id, m.nome
+HAVING COUNT(o.id_os) > 1;
+ 
+# Adiciona isso pra não retornar vazio
+INSERT INTO ordemDeServico
+(carro_id, mecanico_id, status_os)
+VALUES
+(11, 1, 'Em Aberto'),
+(12, 2, 'Em Aberto');
 
-SELECT COUNT(*) FROM clientes;
 
-SELECT COUNT(*) FROM veiculos;
-
-SELECT MAX(preco) FROM servico;
-
-SELECT MIN(preco) FROM servico;
-
-SELECT AVG(preco) FROM servico;
-
-SELECT SUM(preco) FROM servico;
-
-
-# Parte 8 - JOINs
-
-# Cliente + Veículo
-
+#parte 8
 SELECT
     c.nome AS cliente,
     v.modelo,
@@ -207,10 +249,8 @@ SELECT
 FROM clientes c
 INNER JOIN veiculos v
     ON c.id = v.cliente_id;
-
-
-# Ordem + Cliente + Veículo
-
+ 
+# Agora adiciona a ordem, + cliente e + Veículo
 SELECT
     o.id_os AS ordem,
     c.nome AS cliente,
@@ -221,10 +261,8 @@ INNER JOIN veiculos v
     ON o.carro_id = v.carro_id
 INNER JOIN clientes c
     ON v.cliente_id = c.id;
-
-
-# Ordem + Mecânico
-
+ 
+# Aqui só a ordem conversando com o mecânico
 SELECT
     o.id_os AS ordem,
     m.nome AS mecanico,
@@ -233,10 +271,8 @@ SELECT
 FROM ordemDeServico o
 INNER JOIN mecanico m
     ON o.mecanico_id = m.mecanico_id;
-
-
-# Ordem + Serviço realizado
-
+ 
+# A ordem + O serviço realizado
 SELECT
     o.id_os AS ordem,
     s.descricao AS servico,
@@ -247,10 +283,8 @@ INNER JOIN itensDeServico i
     ON o.id_os = i.os_id
 INNER JOIN servico s
     ON i.servico_id = s.id_servico;
-
-
-# Consulta completa
-
+ 
+# Por fim a consulta completa
 SELECT
     c.nome AS cliente,
     v.modelo AS veiculo,
@@ -271,10 +305,8 @@ INNER JOIN itensDeServico i
     ON o.id_os = i.os_id
 INNER JOIN servico s
     ON i.servico_id = s.id_servico;
-
-
-# LEFT JOIN
-
+ 
+# Left Join Aqui
 SELECT
     c.nome AS cliente,
     v.modelo AS veiculo,
@@ -282,12 +314,14 @@ SELECT
 FROM clientes c
 LEFT JOIN veiculos v
     ON c.id = v.cliente_id;
+ 
+# Explicação:
+#Foi utilizado o LEFT JOIN para listar todos os clientes, mesmo aqueles que ainda não tem veículos cadastrados.
+#Com INNER JOIN, seriam mostrados somente os clientes que possuem um veículo relacionado.
+ 
 
-
-# Parte 9 - Subconsultas
-
+#parte 9
 # Serviços com preço acima da média geral
-
 SELECT
     descricao,
     preco
@@ -296,10 +330,8 @@ WHERE preco > (
     SELECT AVG(preco)
     FROM servico
 );
-
-
+ 
 # Veículos de clientes que possuem mais de um veículo
-
 SELECT
     modelo,
     placa,
@@ -311,10 +343,8 @@ WHERE cliente_id IN (
     GROUP BY cliente_id
     HAVING COUNT(*) > 1
 );
-
-
-# Serviços mais caros que "Troca de Óleo e Filtro"
-
+ 
+# Serviços mais caros que o serviço "Troca de Óleo e Filtro"
 SELECT
     descricao,
     preco
@@ -325,280 +355,26 @@ WHERE preco > (
     WHERE descricao = 'Troca de Óleo e Filtro'
 );
 
-# Parte 10 - Stored Procedures
 
-DELIMITER $$
+#parte 10
 
-CREATE PROCEDURE cadastrar_cliente(
-    IN p_nome VARCHAR(255),
-    IN p_telefone VARCHAR(20),
-    IN p_endereco VARCHAR(255)
-)
-BEGIN
-
-    IF p_nome IS NULL OR p_nome = '' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'O nome do cliente é obrigatório';
-    END IF;
-
-    INSERT INTO clientes (nome, telefone, endereco)
-    VALUES (p_nome, p_telefone, p_endereco);
-
-END $$
-
-
-CREATE PROCEDURE abrir_ordem(
-    IN p_carro_id INT,
-    IN p_mecanico_id INT
-)
-BEGIN
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM veiculos
-        WHERE carro_id = p_carro_id
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Veículo não encontrado';
-    END IF;
-
-    INSERT INTO ordemDeServico (
-        carro_id,
-        mecanico_id,
-        status_os
-    )
-    VALUES (
-        p_carro_id,
-        p_mecanico_id,
-        'Em Aberto'
-    );
-
-END $$
-
-
-CREATE PROCEDURE alterar_status_ordem(
-    IN p_id_os INT,
-    IN p_status VARCHAR(255)
-)
-BEGIN
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM ordemDeServico
-        WHERE id_os = p_id_os
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Ordem de serviço não encontrada';
-    END IF;
-
-    UPDATE ordemDeServico
-    SET status_os = p_status
-    WHERE id_os = p_id_os;
-
-END $$
-
-
-CREATE PROCEDURE adicionar_servico_ordem(
-    IN p_os_id INT,
-    IN p_servico_id INT,
-    IN p_quantidade INT
-)
-BEGIN
-
-    DECLARE valor DECIMAL(10,2);
-
-    IF p_quantidade <= 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'A quantidade deve ser maior que zero';
-    END IF;
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM ordemDeServico
-        WHERE id_os = p_os_id
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Ordem de serviço não encontrada';
-    END IF;
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM servico
-        WHERE id_servico = p_servico_id
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Serviço não encontrado';
-    END IF;
-
-    SELECT preco
-    INTO valor
-    FROM servico
-    WHERE id_servico = p_servico_id;
-
-    INSERT INTO itensDeServico (
-        os_id,
-        servico_id,
-        quantidade,
-        preco_cobrado
-    )
-    VALUES (
-        p_os_id,
-        p_servico_id,
-        p_quantidade,
-        valor
-    );
-
-END $$
-
-DELIMITER ;
-
-
-# Parte 11 - Triggers
-
-ALTER TABLE ordemDeServico
-ADD COLUMN data_finalizacao DATETIME;
-
-CREATE TABLE historico_preco_servico (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    servico_id INT,
-    preco_anterior DECIMAL(10,2),
-    preco_novo DECIMAL(10,2),
-    data_alteracao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (servico_id)
-        REFERENCES servico(id_servico)
+#parte 14
+SELECT 
+    m.nome AS mecanico,
+    COUNT(DISTINCT os.id_os) AS quantidade_ordens,
+    SUM(its.quantidade) AS quantidade_servicos,
+    SUM(its.quantidade * its.preco_cobrado) AS valor_total
+FROM mecanico m
+JOIN ordemDeServico os ON m.mecanico_id = os.mecanico_id
+JOIN itensDeServico its ON os.id_os = its.os_id
+GROUP BY m.mecanico_id, m.nome
+HAVING valor_total = (
+    -- Subquery: Encontra o maior faturamento gerado por um único mecânico
+    SELECT MAX(sub.total_faturado)
+    FROM (
+        SELECT SUM(its2.quantidade * its2.preco_cobrado) AS total_faturado
+        FROM ordemDeServico os2
+        JOIN itensDeServico its2 ON os2.id_os = its2.os_id
+        GROUP BY os2.mecanico_id
+    ) AS sub
 );
-
-DELIMITER $$
-
-CREATE TRIGGER trg_historico_preco
-AFTER UPDATE ON servico
-FOR EACH ROW
-BEGIN
-
-    IF OLD.preco <> NEW.preco THEN
-
-        INSERT INTO historico_preco_servico (
-            servico_id,
-            preco_anterior,
-            preco_novo,
-            data_alteracao
-        )
-        VALUES (
-            OLD.id_servico,
-            OLD.preco,
-            NEW.preco,
-            NOW()
-        );
-
-    END IF;
-
-END $$
-
-
-CREATE TRIGGER trg_finalizar_ordem
-BEFORE UPDATE ON ordemDeServico
-FOR EACH ROW
-BEGIN
-
-    IF NEW.status_os = 'Finalizada'
-       AND OLD.status_os <> 'Finalizada' THEN
-
-        SET NEW.data_finalizacao = NOW();
-
-    END IF;
-
-END $$
-
-
-CREATE TRIGGER trg_validar_preco_servico
-BEFORE INSERT ON servico
-FOR EACH ROW
-BEGIN
-
-    IF NEW.preco <= 0 THEN
-
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'O preço do serviço deve ser maior que zero';
-
-    END IF;
-
-END $$
-
-DELIMITER ;
-
-
-# Parte 12 - Integridade do Banco
-
-ALTER TABLE clientes
-ADD COLUMN cpf VARCHAR(14) UNIQUE;
-
-ALTER TABLE servico
-ADD CONSTRAINT chk_preco_positivo
-CHECK (preco > 0);
-
-
-UPDATE clientes
-SET cpf = '111.111.111-11'
-WHERE id = 1;
-
-UPDATE clientes
-SET cpf = '222.222.222-22'
-WHERE id = 2;
-
-
-# CPF duplicado
-# Proteção: UNIQUE
-
-INSERT INTO clientes (
-    nome,
-    telefone,
-    endereco,
-    cpf
-)
-VALUES (
-    'João da Silva',
-    '(48) 99999-0000',
-    'Florianópolis - SC',
-    '111.111.111-11'
-);
-
-
-# Veículo para cliente inexistente
-# Proteção: FOREIGN KEY
-
-INSERT INTO veiculos (
-    cliente_id,
-    modelo,
-    placa
-)
-VALUES (
-    9999,
-    'Fiat Argo',
-    'AAA-0001'
-);
-
-
-# Preço inválido
-# Proteção: CHECK e Trigger
-
-INSERT INTO servico (
-    descricao,
-    preco
-)
-VALUES (
-    'Troca de Filtro',
-    -100
-);
-
-
-# Exclusão de registro referenciado
-# Proteção: FOREIGN KEY
-
-DELETE FROM servico
-WHERE id_servico = 1;
-
-
-# Ordem para veículo inexistente
-# Proteção: Procedure e FOREIGN KEY
-
-CALL abrir_ordem(9999, 1);
