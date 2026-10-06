@@ -153,7 +153,7 @@ ORDER BY nome ASC;
  
 SELECT v.placa, v.modelo, v.cliente_id
 FROM veiculos v
-JOIN clientes c ON c.id = v.id_cliente
+JOIN clientes c ON c.id = v.cliente_id
 WHERE c.nome = 'Carlos Silva';
  
  
@@ -161,15 +161,15 @@ WHERE c.nome = 'Carlos Silva';
  
 select descricao, preco
 from servico
-where valor > 200
-order by valor desc;
+where preco > 200
+order by preco desc;
  
  
 # Serviços entre R$ 100 e R$ 200
  
 select descricao, preco
 from servico
-where preco >= 100 AND valor <= 500
+where preco >= 100 AND preco <= 500
 order by preco ASC;
  
  
@@ -183,9 +183,9 @@ order by nome ASC;
  
 # Ordens abertas
  
-select id_os, carro_id, status, data_emissao
+select id_os, carro_id, status_os, data_emissao
 from ordemDeServico
-where status in ('concluido', 'em andamento', 'em aberto', 'aguardando peca')
+where status_os in ('concluido', 'em andamento', 'em aberto', 'aguardando peca')
 order by data_emissao ASC;
  
  
@@ -575,63 +575,62 @@ UPDATE clientes
 SET cpf = '222.222.222-22'
 WHERE id = 2;
 
-
+#teste de erro tira # pra teste depois
 # CPF duplicado
 # Proteção: UNIQUE
 
-INSERT INTO clientes (
-    nome,
-    telefone,
-    endereco,
-    cpf
-)
-VALUES (
-    'João da Silva',
-    '(48) 99999-0000',
-    'Florianópolis - SC',
-    '111.111.111-11'
-);
+#INSERT INTO clientes(  nome,
+    #telefone,
+    #endereco,
+   # cpf
+#)
+#VALUES (
+    #'João da Silva',
+    #'(48) 99999-0000',
+    #'Florianópolis - SC',
+    #'111.111.111-11'
+#);
 
 
 # Veículo para cliente inexistente
 # Proteção: FOREIGN KEY
 
-INSERT INTO veiculos (
-    cliente_id,
-    modelo,
-    placa
-)
-VALUES (
-    9999,
-    'Fiat Argo',
-    'AAA-0001'
-);
+#INSERT INTO veiculos (
+    #cliente_id,
+    #modelo,
+    #placa
+#)
+#VALUES (
+    #9999,
+    #'Fiat Argo',
+    #'AAA-0001'
+#);
 
 
 # Preço inválido
 # Proteção: CHECK e Trigger
 
-INSERT INTO servico (
-    descricao,
-    preco
-)
-VALUES (
-    'Troca de Filtro',
-    -100
-);
+#INSERT INTO servico (
+  #  descricao,
+  #  preco
+#)
+#VALUES (
+ #   'Troca de Filtro',
+ #   -100
+#);
 
 
 # Exclusão de registro referenciado
 # Proteção: FOREIGN KEY
 
-DELETE FROM servico
-WHERE id_servico = 1;
+#DELETE FROM servico
+#WHERE id_servico = 1;
 
 
 # Ordem para veículo inexistente
 # Proteção: Procedure e FOREIGN KEY
 
-CALL abrir_ordem(9999, 1);
+#CALL abrir_ordem(9999, 1);
 #parte 14
 SELECT 
     m.nome AS mecanico,
