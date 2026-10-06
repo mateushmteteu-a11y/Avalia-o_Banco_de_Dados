@@ -1,0 +1,11 @@
+#parte 13
+SELECT    
+           c.nome AS cliente,    
+           COUNT(o.id_os) AS quantidade_ordens,    
+           SUM(i.preco_cobrado) AS total_gasto
+FROM clientes c
+JOIN veiculos v ON v.cliente_id = c.id
+JOIN ordemDeServico o ON o.carro_id = v.carro_id
+JOIN itensDeServico i ON i.os_id = o.id_os
+GROUP BY c.nome
+ORDER BY total_gasto DESC;
