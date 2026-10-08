@@ -42,7 +42,7 @@ order by nome ASC;
  
 select id_os, carro_id, status_os, data_emissao
 from ordemDeServico
-where status_os in ('concluido', 'em andamento', 'em aberto', 'aguardando peca')
+where status_os in ('Concluído', 'Em Andamento', 'Em Aberto', 'Aguardando Peça')
 order by data_emissao ASC;
  
  

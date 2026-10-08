@@ -24,10 +24,3 @@ INNER JOIN ordemDeServico o
     ON m.mecanico_id = o.mecanico_id
 GROUP BY m.mecanico_id, m.nome
 HAVING COUNT(o.id_os) > 1;
- 
-# Adiciona isso pra não retornar vazio
-INSERT INTO ordemDeServico
-(carro_id, mecanico_id, status_os)
-VALUES
-(11, 1, 'Em Aberto'),
-(12, 2, 'Em Aberto');
